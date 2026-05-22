@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ant UI Generation (Figma)"
+  short_description: "Ant-style HTML UI for Figma"
+  default_prompt: "Generate a self-contained HTML backend UI based on my request using Ant Design-like styles (no React/Ant package installs). First read references/ant-visual-profile.md; if details are missing, use references/LLMs.txt to locate topics and retrieve only relevant snippets from references/llms-full.txt (never load full corpus). Keep only requested sections. If list/table data is required, render with column-based independent div columns, default row baseline 48px, adaptive row-height synchronized across columns, Ant-like light gray row hover, no vertical column lines by default, and no list header bar by default. Apply global font family 'Noto Sans SC', fallback 'PingFang SC', then sans-serif. Respect user-provided fields exactly; otherwise mock context-appropriate fields and values."

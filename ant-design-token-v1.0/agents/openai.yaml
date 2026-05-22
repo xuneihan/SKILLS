@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ant Design Token"
+  short_description: "Ant Design 5 style B-end admin UI"
+  default_prompt: "Use $ant-design-token to generate, refactor, or review a B-side admin page with Ant Design 5 style tokens, spacing, and enterprise layout conventions."
