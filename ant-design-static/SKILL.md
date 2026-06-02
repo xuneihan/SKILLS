@@ -3,7 +3,7 @@ name: ant-design-static
 description: Use when generating static Ant Design-style admin HTML pages or components for backend drafts, prototypes, and visual page design.
 ---
 
-# Ant Static HTML Design
+# Ant Static Design
 
 ## Overview
 
@@ -53,8 +53,9 @@ Use the local Ant references as the default source for exact visual values.
 4. Reuse a clear wrapper hierarchy so major sections are easy to read and maintain.
 5. Prefer predictable spacing and alignment over decorative complexity.
 6. Keep the DOM straightforward and avoid unnecessary nested wrappers.
-7. Keep styles self-contained so the page renders consistently when opened directly.
-8. Tables and lists should follow Ant Design-like spacing, borders, hover states, and action semantics.
+7. Prefer simple, direct DOM hierarchy so the output is easier to import into Figma via HTML-to-Figma plugins.
+8. Keep styles self-contained so the page renders consistently when opened directly.
+9. Tables and lists should follow Ant Design-like spacing, borders, hover states, and action semantics.
 
 ## Page Patterns
 
@@ -81,6 +82,7 @@ Generated HTML should remain easy to inspect and reuse.
 - keep rendering stable
 - keep styles self-contained
 - keep structure clear and shallow
+- avoid unnecessary wrapper nesting when the same layout can be expressed more directly
 
 ## Priority Rules
 
