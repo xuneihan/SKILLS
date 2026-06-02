@@ -82,7 +82,6 @@ Generated HTML should remain easy to inspect and reuse.
 - keep rendering stable
 - keep styles self-contained
 - keep structure clear and shallow
-- avoid unnecessary wrapper nesting when the same layout can be expressed more directly
 
 ## Priority Rules
 
