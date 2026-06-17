@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zhijuan Image Contract"
+  short_description: "Source-faithful image to prompt JSON"
+  default_prompt: "Use $zhijuan-image-contract to analyze this image and return a source-faithful JSON-only reconstruction prompt contract."

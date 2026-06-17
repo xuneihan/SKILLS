@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ant Design B端设计规范 · Demo验证</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<style>
+/* ============================================================
+   Ant Design Token 系统 - CSS 变量落地
+   来源：SKILL.md 第二章 Design Token 体系
+   ============================================================ */
+:root {
+  /* 主色 / 功能色 */
+  --color-primary:          #1677FF;
+  --color-primary-hover:    #4096FF;
+  --color-primary-active:   #0958D9;
+  --color-primary-bg:       #E6F4FF;
+  --color-success:          #52C41A;
+  --color-success-bg:       #F6FFED;
+  --color-warning:          #FAAD14;
+  --color-warning-bg:       #FFFBE6;
+  --color-error:            #FF4D4F;
+  --color-error-bg:         #FFF2F0;
+  --color-info:             #1677FF;
+
+  /* 中性色 */
+  --color-text:             rgba(0,0,0,.88);
+  --color-text-secondary:   rgba(0,0,0,.65);
+  --color-text-disabled:    rgba(0,0,0,.25);
+  --color-text-heading:     rgba(0,0,0,.88);
+  --color-bg-container:     #FFFFFF;
+  --color-bg-layout:        #F5F5F5;
+  --color-bg-elevated:      #FFFFFF;
+  --color-border:           #D9D9D9;
+  --color-border-secondary: #F0F0F0;
+  --color-fill-quaternary:  rgba(0,0,0,.02);
+  --color-fill-secondary:   rgba(0,0,0,.06);
+
+  /* 尺寸/圆角/间距 Token */
+  --border-radius:      6px;
+  --border-radius-lg:   8px;
+  --border-radius-sm:   4px;
+  --font-size:          14px;
+  --font-size-sm:       12px;
+  --font-size-lg:       16px;
+  --line-height:        1.5714;
+
+  /* 间距 (8px 栅格) */
+  --spacing-xs:    4px;
+  --spacing-sm:    8px;
+  --spacing-md:    16px;
+  --spacing-lg:    24px;
+  --spacing-xl:    32px;
+  --spacing-2xl:   48px;
+
+  /* 阴影 */
+  --shadow-card:   0 1px 2px -2px rgba(0,0,0,.16), 0 3px 6px 0 rgba(0,0,0,.12), 0 5px 12px 4px rgba(0,0,0,.09);
+  --shadow-sm:     0 1px 2px 0 rgba(0,0,0,.03), 0 1px 6px -1px rgba(0,0,0,.02), 0 2px 4px 0 rgba(0,0,0,.02);
+  --shadow-modal:  0 6px 16px 0 rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05);
+
+  /* 侧边栏尺寸 */
+  --sider-width: 200px;
+  --header-height: 64px;
+}
+
+/* ============================================================
+   基础重置
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  overflow: hidden; /* 禁止文档级滚动，防止滚动条出现导致布局跳动 */
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+               'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: var(--font-size);
+  color: var(--color-text);
+  line-height: var(--line-height);
+  background: var(--color-bg-layout);
+}
+
+/* ============================================================
+   Layout 骨架（SKILL 4.1：标准后台骨架结构）
+   ============================================================ */
+.layout { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* Header */
+.header {
+  height: var(--header-height);
+  background: #001529;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.header-logo {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: var(--spacing-xl);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.header-logo .logo-icon {
+  width: 32px; height: 32px;
+  background: var(--color-primary);
+  border-radius: var(--border-radius);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.header-nav { display: flex; gap: 0; flex: 1; }
+.header-nav a {
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  padding: 0 var(--spacing-md);
+  height: var(--header-height);
+  display: flex; align-items: center;
+  font-size: var(--font-size);
+  transition: color .2s, background .2s;
+  position: relative;
+}
+.header-nav a:hover { color: #fff; background: rgba(255,255,255,.08); }
+.header-nav a.active { color: #fff; background: var(--color-primary); }
+.header-right {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  margin-left: auto;
+}
+.header-right .avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; cursor: pointer;
+}
+.badge-wrap { position: relative; cursor: pointer; }
+.badge-wrap .badge {
+  position: absolute; top: -4px; right: -6px;
+  background: var(--color-error); color: #fff;
+  font-size: 10px; height: 16px; min-width: 16px;
+  border-radius: 8px; padding: 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.header-icon { color: rgba(255,255,255,.65); font-size: 16px; cursor: pointer; transition: color .2s; }
+.header-icon:hover { color: #fff; }
+
+/* Main layout */
+.layout-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+/* Sider */
+.sider {
+  width: var(--sider-width);
+  background: #fff;
+  border-right: 1px solid var(--color-border-secondary);
+  overflow-y: auto; overflow-x: hidden;
+  flex-shrink: 0;
+}
+.menu-section-title {
+  font-size: 11px;
+  color: var(--color-text-disabled);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+.sider .menu-section-title:first-child {
+  margin-top: 0;
+  padding-top: var(--spacing-md);
+}
+.menu-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px var(--spacing-md);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  font-size: var(--font-size);
+  color: var(--color-text);
+  border-radius: 0;
+  position: relative;
+  user-select: none;
+}
+.menu-item:hover { background: var(--color-primary-bg); color: var(--color-primary); }
+.menu-item.active {
+  background: var(--color-primary-bg); color: var(--color-primary);
+  font-weight: 500;
+}
+.menu-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--color-primary);
+  border-radius: 0 2px 2px 0;
+}
+.menu-item i { width: 16px; text-align: center; font-size: 14px; }
+.menu-icon { width: 16px !important; height: 16px !important; vertical-align: -3px; flex-shrink: 0; stroke-width: 1.75; }
+.menu-item svg { stroke: currentColor; }
+
+/* Content */
+.content-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+  min-width: 0;
+  min-height: 0;
+}
+.breadcrumb {
+  display: flex; align-items: center; gap: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+}
+.breadcrumb .sep { color: var(--color-text-disabled); }
+.breadcrumb .current { color: var(--color-text); }
+
+/* ============================================================
+   Card 组件（SKILL 4.5）
+   ============================================================ */
+.card {
+  background: var(--color-bg-container);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border-secondary);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-head {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-secondary);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-size: 16px; font-weight: 600; color: var(--color-text-heading); }
+.card-extra { display: flex; gap: var(--spacing-sm); }
+.card-body { padding: var(--spacing-lg); }
+
+/* ============================================================
+   KPI 指标卡片（SKILL 5.4：工作台数据看板）
+   ============================================================ */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.kpi-card {
+  background: var(--color-bg-container);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border-secondary);
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  position: relative; overflow: hidden;
+}
+.kpi-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi-card.blue::after { background: var(--color-primary); }
+.kpi-card.green::after { background: var(--color-success); }
+.kpi-card.orange::after { background: var(--color-warning); }
+.kpi-card.red::after { background: var(--color-error); }
+.kpi-label { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--spacing-xs); }
+.kpi-value { font-size: 28px; font-weight: 700; color: var(--color-text-heading); line-height: 1.2; margin-bottom: var(--spacing-sm); }
+.kpi-value .unit { font-size: 14px; font-weight: 500; margin-left: 2px; color: var(--color-text-secondary); }
+.kpi-trend { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-sm); }
+.trend-up { color: var(--color-success); }
+.trend-down { color: var(--color-error); }
+.trend-neutral { color: var(--color-text-disabled); }
+.kpi-icon {
+  position: absolute; right: var(--spacing-lg); top: 50%;
+  transform: translateY(-50%);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; opacity: .12;
+}
+.kpi-card.blue .kpi-icon { background: var(--color-primary); }
+.kpi-card.green .kpi-icon { background: var(--color-success); }
+.kpi-card.orange .kpi-icon { background: var(--color-warning); }
+.kpi-card.red .kpi-icon { background: var(--color-error); }
+
+/* ============================================================
+   图表区（SVG 折线图 + 环形图）
+   ============================================================ */
+.chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.chart-wrap { position: relative; }
+.chart-title { font-size: 15px; font-weight: 600; color: var(--color-text-heading); }
+.chart-subtitle { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.chart-legend { display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-sm); }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ============================================================
+   搜索列表页（SKILL 5.1）
+   ============================================================ */
+.search-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: var(--spacing-sm);
+  align-items: flex-end;
+}
+.form-item { display: flex; flex-direction: column; gap: 4px; }
+.form-label { font-size: var(--font-size-sm); color: var(--color-text); font-weight: 500; }
+.form-label .required { color: var(--color-error); margin-right: 2px; }
+.input, .select {
+  height: 32px;
+  padding: 0 var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size);
+  color: var(--color-text);
+  background: var(--color-bg-container);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  width: 100%;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.input::placeholder { color: var(--color-text-disabled); }
+.input:hover, .select:hover { border-color: var(--color-primary-hover); }
+.input:focus, .select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(22,119,255,.2);
+}
+
+/* ============================================================
+   Button 组件（SKILL 4.3）
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 var(--spacing-md);
+  height: 32px;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size);
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+  font-weight: 400;
+  line-height: 1;
+}
+.btn-primary {
+  background: var(--color-primary); color: #fff; border-color: var(--color-primary);
+}
+.btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+.btn-primary:active { background: var(--color-primary-active); border-color: var(--color-primary-active); }
+.btn-default {
+  background: var(--color-bg-container); color: var(--color-text); border-color: var(--color-border);
+}
+.btn-default:hover { color: var(--color-primary); border-color: var(--color-primary); }
+.btn-danger {
+  background: var(--color-error); color: #fff; border-color: var(--color-error);
+}
+.btn-danger:hover { background: #ff7875; border-color: #ff7875; }
+.btn-link {
+  background: transparent; color: var(--color-primary); border-color: transparent; padding: 0 4px; height: auto;
+}
+.btn-link:hover { color: var(--color-primary-hover); }
+.btn-sm { height: 24px; padding: 0 var(--spacing-sm); font-size: var(--font-size-sm); }
+.btn-icon { padding: 0 8px; }
+.btn + .btn { margin-left: var(--spacing-xs); }
+
+/* ============================================================
+   Tag / Badge（SKILL 4.5）
+   ============================================================ */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 0 8px; height: 22px;
+  border-radius: 11px;
+  font-size: var(--font-size-sm);
+  border: 1px solid;
+  white-space: nowrap;
+}
+.tag-success { background: var(--color-success-bg); color: #389E0D; border-color: #B7EB8F; }
+.tag-warning { background: var(--color-warning-bg); color: #D46B08; border-color: #FFD591; }
+.tag-error   { background: var(--color-error-bg);   color: #CF1322; border-color: #FFA39E; }
+.tag-default { background: var(--color-fill-secondary); color: var(--color-text); border-color: var(--color-border); }
+.tag-blue    { background: var(--color-primary-bg); color: var(--color-primary); border-color: #91CAFF; }
+.tag-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ============================================================
+   Table（SKILL 4.4）
+   ============================================================ */
+.table-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap; gap: var(--spacing-sm);
+}
+.toolbar-left { display: flex; align-items: center; gap: var(--spacing-sm); }
+.toolbar-right { display: flex; align-items: center; gap: var(--spacing-sm); }
+.selected-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-primary-bg);
+  border: 1px solid #91CAFF;
+  border-radius: var(--border-radius);
+  padding: 2px 10px;
+  display: none;
+}
+.selected-hint.visible { display: inline-block; }
+
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--font-size);
+}
+thead th {
+  background: var(--color-fill-quaternary);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  padding: 10px var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-secondary);
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+}
+thead th.sort-active { color: var(--color-primary); }
+thead th .sort-icon { margin-left: 4px; opacity: .5; font-size: 10px; }
+tbody tr {
+  border-bottom: 1px solid var(--color-border-secondary);
+  transition: background .15s;
+}
+tbody tr:hover { background: rgba(0,0,0,.02); }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 12px var(--spacing-md); color: var(--color-text); }
+tbody td.text-right { text-align: right; }
+.table-checkbox {
+  width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer;
+}
+.table-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--spacing-md) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-border-secondary);
+  margin-top: var(--spacing-xs);
+}
+.pagination { display: flex; gap: 4px; align-items: center; }
+.page-btn {
+  min-width: 32px; height: 32px; padding: 0 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-bg-container);
+  cursor: pointer; font-size: var(--font-size);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: all .2s; font-family: inherit;
+  color: var(--color-text);
+}
+.page-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.page-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.page-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ============================================================
+   表单页（SKILL 5.2）
+   ============================================================ */
+.form-section-title {
+  font-size: 15px; font-weight: 600; color: var(--color-text-heading);
+  margin-bottom: var(--spacing-md);
+  display: flex; align-items: center; gap: var(--spacing-sm);
+}
+.form-section-title::before {
+  content: '';
+  width: 3px; height: 16px;
+  background: var(--color-primary); border-radius: 2px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-sm) var(--spacing-xl); }
+.form-grid-full { grid-column: 1 / -1; }
+.input-group { position: relative; }
+.input-group .input { padding-right: 32px; }
+.input-group .input-suffix {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  color: var(--color-text-disabled); font-size: var(--font-size-sm);
+}
+.form-help { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: 4px; }
+.form-error { font-size: var(--font-size-sm); color: var(--color-error); margin-top: 4px; display: none; }
+.form-error.visible { display: block; }
+.input.error { border-color: var(--color-error); }
+.input.error:focus { box-shadow: 0 0 0 2px rgba(255,77,79,.2); }
+.textarea {
+  height: 80px; padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border); border-radius: var(--border-radius);
+  font-size: var(--font-size); resize: vertical;
+  width: 100%; outline: none; font-family: inherit; color: var(--color-text);
+  transition: border-color .2s, box-shadow .2s;
+  line-height: var(--line-height);
+}
+.textarea:hover { border-color: var(--color-primary-hover); }
+.textarea:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(22,119,255,.2); }
+.switch {
+  width: 44px; height: 22px;
+  background: var(--color-border);
+  border-radius: 11px; cursor: pointer;
+  transition: background .2s;
+  position: relative; border: none; padding: 0; appearance: none;
+}
+.switch::after {
+  content: '';
+  position: absolute; left: 2px; top: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2);
+  transition: left .2s;
+}
+.switch.on { background: var(--color-primary); }
+.switch.on::after { left: 24px; }
+
+/* Radio */
+.radio-group { display: flex; gap: var(--spacing-md); align-items: center; }
+.radio-item { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: var(--font-size); }
+.radio-item input[type="radio"] { accent-color: var(--color-primary); width: 14px; height: 14px; }
+
+/* Upload area */
+.upload-area {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  background: var(--color-fill-quaternary);
+}
+.upload-area:hover { border-color: var(--color-primary); background: var(--color-primary-bg); }
+.upload-icon { font-size: 32px; color: var(--color-text-disabled); margin-bottom: var(--spacing-sm); }
+.upload-text { font-size: var(--font-size); color: var(--color-text-secondary); }
+.upload-hint { font-size: var(--font-size-sm); color: var(--color-text-disabled); margin-top: 4px; }
+
+/* Sticky footer */
+.form-footer {
+  position: sticky; bottom: 0;
+  background: var(--color-bg-container);
+  border-top: 1px solid var(--color-border-secondary);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex; gap: var(--spacing-sm); justify-content: flex-end;
+  z-index: 10;
+  box-shadow: 0 -2px 8px rgba(0,0,0,.06);
+  margin: 0 calc(-1 * var(--spacing-lg)) calc(-1 * var(--spacing-lg));
+}
+
+/* ============================================================
+   Notification / Message 反馈（SKILL 4.6）
+   ============================================================ */
+.toast-container {
+  position: fixed; top: var(--spacing-xl); right: var(--spacing-xl);
+  display: flex; flex-direction: column; gap: var(--spacing-sm);
+  z-index: 9999; pointer-events: none;
+}
+.toast {
+  background: var(--color-bg-container);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding: var(--spacing-md) var(--spacing-lg);
+  min-width: 280px; max-width: 360px;
+  display: flex; gap: var(--spacing-md); align-items: flex-start;
+  pointer-events: auto;
+  animation: slideIn .3s ease;
+  border-left: 4px solid;
+}
+.toast.success { border-left-color: var(--color-success); }
+.toast.warning { border-left-color: var(--color-warning); }
+.toast.error   { border-left-color: var(--color-error); }
+.toast.info    { border-left-color: var(--color-primary); }
+.toast-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.toast.success .toast-icon { color: var(--color-success); }
+.toast.warning .toast-icon { color: var(--color-warning); }
+.toast.error   .toast-icon { color: var(--color-error); }
+.toast.info    .toast-icon { color: var(--color-primary); }
+.toast-title { font-weight: 600; font-size: var(--font-size); margin-bottom: 2px; }
+.toast-desc { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+/* Modal（SKILL 4.6）*/
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1000;
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--color-bg-container);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-modal);
+  width: 520px; max-width: 90vw;
+  animation: modalIn .25s ease;
+}
+.modal-head {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-secondary);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-size: 16px; font-weight: 600; }
+.modal-close { cursor: pointer; color: var(--color-text-disabled); font-size: 16px; transition: color .2s; }
+.modal-close:hover { color: var(--color-text); }
+.modal-body { padding: var(--spacing-lg); }
+.modal-footer {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--color-border-secondary);
+  display: flex; gap: var(--spacing-sm); justify-content: flex-end;
+}
+@keyframes modalIn { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ============================================================
+   Tabs（SKILL 4.2）
+   ============================================================ */
+.tabs { border-bottom: 1px solid var(--color-border-secondary); display: flex; gap: 0; margin-bottom: var(--spacing-lg); }
+.tab-item {
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  font-size: var(--font-size);
+  color: var(--color-text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .2s, border-color .2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.tab-item:hover { color: var(--color-primary); }
+.tab-item.active { color: var(--color-primary); border-bottom-color: var(--color-primary); font-weight: 500; }
+
+/* ============================================================
+   Steps（SKILL 4.2）
+   ============================================================ */
+.steps { display: flex; align-items: flex-start; margin-bottom: var(--spacing-xl); }
+.step-item { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 16px; left: calc(50% + 16px);
+  right: calc(-50% + 16px);
+  height: 1px; background: var(--color-border);
+}
+.step-item.done:not(:last-child)::after { background: var(--color-primary); }
+.step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--font-size);
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-container);
+  color: var(--color-text-disabled);
+  position: relative; z-index: 1;
+  transition: all .2s;
+}
+.step-item.active .step-circle { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-bg); }
+.step-item.done .step-circle { border-color: var(--color-primary); background: var(--color-primary); color: #fff; }
+.step-label { font-size: var(--font-size-sm); margin-top: var(--spacing-xs); color: var(--color-text-secondary); text-align: center; }
+.step-item.active .step-label { color: var(--color-primary); font-weight: 500; }
+.step-item.done .step-label { color: var(--color-text-secondary); }
+
+/* ============================================================
+   Empty state（避坑：空状态必须设计）
+   ============================================================ */
+.empty { display: flex; flex-direction: column; align-items: center; padding: var(--spacing-2xl) var(--spacing-xl); }
+.empty-img { width: 64px; height: 64px; margin-bottom: var(--spacing-md); opacity: .4; }
+.empty-text { font-size: var(--font-size); color: var(--color-text-secondary); margin-bottom: var(--spacing-md); }
+
+/* ============================================================
+   Section header
+   ============================================================ */
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+.page-title { font-size: 20px; font-weight: 600; color: var(--color-text-heading); }
+
+/* ============================================================
+   Tab panels
+   ============================================================ */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ============================================================
+   Token 展示（面板）
+   ============================================================ */
+.token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--spacing-sm); }
+.token-item {
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+.token-swatch { height: 48px; }
+.token-info { padding: 8px 10px; background: var(--color-bg-container); }
+.token-name { font-size: 11px; font-weight: 600; color: var(--color-text); font-family: monospace; }
+.token-value { font-size: 11px; color: var(--color-text-secondary); font-family: monospace; }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1200px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .chart-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  :root { --sider-width: 0px; }
+  .sider { display: none; }
+  .search-bar { grid-template-columns: 1fr 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   Skeleton loading（SKILL 5.4）
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-fill-secondary) 25%, var(--color-fill-quaternary) 50%, var(--color-fill-secondary) 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--border-radius);
+}
+@keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+/* Misc utilities */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-bold { font-weight: 600; }
+.w-full { width: 100%; }
+.mono { font-family: monospace; }
+.divider { height: 1px; background: var(--color-border-secondary); margin: var(--spacing-md) 0; }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     Toast 容器
+     ========================================================= -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- =========================================================
+     Modal
+     ========================================================= -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">确认删除</span>
+      <span class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></span>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <i class="fas fa-exclamation-circle" style="color:var(--color-warning);font-size:22px;margin-top:2px;flex-shrink:0"></i>
+        <div>
+          <div style="font-weight:600;margin-bottom:6px;">确定要删除用户「张三丰」吗？</div>
+          <div class="text-secondary text-sm">删除后数据将无法恢复，请谨慎操作。</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="closeModal()">取消</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     Layout 骨架
+     ========================================================= -->
+<div class="layout">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-icon"><i class="fas fa-layer-group" style="color:#fff"></i></div>
+      AntD Pro
+    </div>
+    <nav class="header-nav">
+      <a href="#" class="active"><i data-feather="home" style="width:15px;height:15px;vertical-align:-2px"></i> 工作台</a>
+      <a href="#"><i data-feather="trending-up" style="width:15px;height:15px;vertical-align:-2px"></i> 数据中心</a>
+      <a href="#"><i data-feather="settings" style="width:15px;height:15px;vertical-align:-2px"></i> 系统设置</a>
+    </nav>
+    <div class="header-right">
+      <div class="badge-wrap">
+        <span class="header-icon"><i data-feather="bell" style="width:16px;height:16px;vertical-align:-3px"></i></span>
+        <span class="badge">3</span>
+      </div>
+      <span class="header-icon"><i data-feather="search" style="width:16px;height:16px;vertical-align:-3px"></i></span>
+      <div class="avatar" title="张管理员">张</div>
+    </div>
+  </header>
+
+  <div class="layout-body">
+    <!-- Sider -->
+    <aside class="sider">
+      <div class="menu-section-title">主导航</div>
+      <div class="menu-item active" onclick="switchTab('dashboard')">
+        <i data-feather="bar-chart-2" class="menu-icon"></i> 数据看板
+      </div>
+      <div class="menu-item" onclick="switchTab('list')">
+        <i data-feather="users" class="menu-icon"></i> 用户管理
+      </div>
+      <div class="menu-item" onclick="switchTab('form')">
+        <i data-feather="user-plus" class="menu-icon"></i> 新增用户
+      </div>
+      <div class="menu-section-title">系统</div>
+      <div class="menu-item" onclick="switchTab('tokens')">
+        <i data-feather="layers" class="menu-icon"></i> 设计规范
+      </div>
+      <div class="menu-item">
+        <i data-feather="shield" class="menu-icon"></i> 权限管理
+      </div>
+      <div class="menu-item">
+        <i data-feather="file-text" class="menu-icon"></i> 操作日志
+      </div>
+      <div class="menu-item">
+        <i data-feather="settings" class="menu-icon"></i> 系统配置
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content-wrapper">
+
+      <!-- ===== TAB: 数据看板 ===== -->
+      <div id="tab-dashboard" class="tab-panel active">
+        <div class="breadcrumb">
+          <span>首页</span><span class="sep">/</span>
+          <span class="current">数据看板</span>
+        </div>
+        <div class="page-header">
+          <div>
+            <div class="page-title">数据看板</div>
+            <div class="text-sm text-secondary" style="margin-top:4px">实时更新 · 最后同步：2026-06-08 10:30</div>
+          </div>
+          <div class="flex gap-sm">
+            <select class="select" style="width:140px">
+              <option>最近 7 天</option>
+              <option>最近 30 天</option>
+              <option>最近 90 天</option>
+            </select>
+            <button class="btn btn-default"><i class="fas fa-sync-alt"></i> 刷新</button>
+            <button class="btn btn-primary"><i class="fas fa-download"></i> 导出报告</button>
+          </div>
+        </div>
+
+        <!-- KPI 卡片区（SKILL 5.4：指标卡片模块）-->
+        <div class="kpi-grid mb-md">
+          <div class="kpi-card blue">
+            <div class="kpi-label">总用户数</div>
+            <div class="kpi-value">24,618<span class="unit">人</span></div>
+            <div class="kpi-trend">
+              <span class="trend-up"><i class="fas fa-arrow-up"></i> +12.5%</span>
+              <span class="text-secondary">较上周</span>
+            </div>
+            <div class="kpi-icon" style="color:var(--color-primary)"><i class="fas fa-users"></i></div>
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-label">月总收入</div>
+            <div class="kpi-value">¥1,286<span class="unit">万</span></div>
+            <div class="kpi-trend">
+              <span class="trend-up"><i class="fas fa-arrow-up"></i> +8.3%</span>
+              <span class="text-secondary">较上月</span>
+            </div>
+            <div class="kpi-icon" style="color:var(--color-success)"><i class="fas fa-yen-sign"></i></div>
+          </div>
+          <div class="kpi-card orange">
+            <div class="kpi-label">待处理订单</div>
+            <div class="kpi-value">347<span class="unit">单</span></div>
+            <div class="kpi-trend">
+              <span class="trend-down"><i class="fas fa-arrow-down"></i> -5.2%</span>
+              <span class="text-secondary">较昨日</span>
+            </div>
+            <div class="kpi-icon" style="color:var(--color-warning)"><i class="fas fa-shopping-cart"></i></div>
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-label">异常告警</div>
+            <div class="kpi-value">12<span class="unit">条</span></div>
+            <div class="kpi-trend">
+              <span class="trend-neutral"><i class="fas fa-minus"></i> 持平</span>
+              <span class="text-secondary">较昨日</span>
+            </div>
+            <div class="kpi-icon" style="color:var(--color-error)"><i class="fas fa-exclamation-triangle"></i></div>
+          </div>
+        </div>
+
+        <!-- 图表区（SKILL 5.4）-->
+        <div class="chart-grid mb-md">
+          <!-- 折线图 -->
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">用户增长趋势</div>
+                <div class="text-sm text-secondary" style="margin-top:2px">近 7 天新增用户数</div>
+              </div>
+              <div class="card-extra">
+                <div class="tabs" style="border:none;margin:0">
+                  <div class="tab-item active" style="padding:4px 10px">日</div>
+                  <div class="tab-item" style="padding:4px 10px">周</div>
+                  <div class="tab-item" style="padding:4px 10px">月</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <svg viewBox="0 0 500 180" style="width:100%;overflow:visible" aria-label="用户增长折线图">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1677FF" stop-opacity=".2"/>
+                    <stop offset="100%" stop-color="#1677FF" stop-opacity="0"/>
+                  </linearGradient>
+                  <linearGradient id="lineGrad2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#52C41A" stop-opacity=".15"/>
+                    <stop offset="100%" stop-color="#52C41A" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- Y轴网格线 -->
+                <line x1="40" y1="10" x2="40" y2="150" stroke="#F0F0F0" stroke-width="1"/>
+                <line x1="40" y1="10" x2="490" y2="10" stroke="#F0F0F0" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="47" x2="490" y2="47" stroke="#F0F0F0" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="85" x2="490" y2="85" stroke="#F0F0F0" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="122" x2="490" y2="122" stroke="#F0F0F0" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="150" x2="490" y2="150" stroke="#D9D9D9" stroke-width="1"/>
+                <!-- Y轴标签 -->
+                <text x="35" y="13" text-anchor="end" font-size="10" fill="#8C8C8C">3k</text>
+                <text x="35" y="50" text-anchor="end" font-size="10" fill="#8C8C8C">2k</text>
+                <text x="35" y="88" text-anchor="end" font-size="10" fill="#8C8C8C">1k</text>
+                <text x="35" y="125" text-anchor="end" font-size="10" fill="#8C8C8C">500</text>
+                <text x="35" y="153" text-anchor="end" font-size="10" fill="#8C8C8C">0</text>
+                <!-- 用户数据：新增 -->
+                <path d="M55,120 L130,90 L205,70 L280,50 L355,40 L430,25 L490,18"
+                      fill="none" stroke="#1677FF" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M55,120 L130,90 L205,70 L280,50 L355,40 L430,25 L490,18 L490,150 L55,150 Z"
+                      fill="url(#lineGrad)"/>
+                <!-- 数据点 -->
+                <circle cx="55"  cy="120" r="4" fill="#fff" stroke="#1677FF" stroke-width="2"/>
+                <circle cx="130" cy="90"  r="4" fill="#fff" stroke="#1677FF" stroke-width="2"/>
+                <circle cx="205" cy="70"  r="4" fill="#fff" stroke="#1677FF" stroke-width="2"/>
+                <circle cx="280" cy="50"  r="4" fill="#fff" stroke="#1677FF" stroke-width="2"/>
+                <circle cx="355" cy="40"  r="4" fill="#fff" stroke="#1677FF" stroke-width="2"/>
+                <circle cx="430" cy="25"  r="4" fill="#fff" stroke="#1677FF" stroke-width="2"/>
+                <circle cx="490" cy="18"  r="4.5" fill="#1677FF" stroke="#fff" stroke-width="2"/>
+                <!-- 活跃用户数据 -->
+                <path d="M55,135 L130,118 L205,105 L280,95 L355,80 L430,68 L490,60"
+                      fill="none" stroke="#52C41A" stroke-width="2" stroke-dasharray="5,3" stroke-linejoin="round"/>
+                <!-- X轴标签 -->
+                <text x="55"  y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/2</text>
+                <text x="130" y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/3</text>
+                <text x="205" y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/4</text>
+                <text x="280" y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/5</text>
+                <text x="355" y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/6</text>
+                <text x="430" y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/7</text>
+                <text x="490" y="166" text-anchor="middle" font-size="10" fill="#8C8C8C">6/8</text>
+              </svg>
+              <div class="chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#1677FF"></div> 新增用户</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#52C41A;opacity:.6"></div> 活跃用户</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 环形图（占比）-->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">渠道来源占比</div>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;align-items:center">
+              <svg viewBox="0 0 160 160" style="width:160px;height:160px">
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#F5F5F5" stroke-width="28"/>
+                <!-- 有机搜索 35% → 219.9/360 -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#1677FF" stroke-width="28"
+                        stroke-dasharray="131.9 376.9" stroke-dashoffset="94.2" transform="rotate(-90,80,80)"/>
+                <!-- 直接访问 25% -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#52C41A" stroke-width="28"
+                        stroke-dasharray="94.2 414.6" stroke-dashoffset="-37.7" transform="rotate(-90,80,80)"/>
+                <!-- 推荐流量 22% -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#FAAD14" stroke-width="28"
+                        stroke-dasharray="82.9 425.9" stroke-dashoffset="-131.9" transform="rotate(-90,80,80)"/>
+                <!-- 社交媒体 18% -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#FF4D4F" stroke-width="28"
+                        stroke-dasharray="67.9 440.9" stroke-dashoffset="-214.8" transform="rotate(-90,80,80)"/>
+                <text x="80" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#1D2129">35%</text>
+                <text x="80" y="92" text-anchor="middle" font-size="11" fill="#8C8C8C">有机搜索</text>
+              </svg>
+              <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                  <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#1677FF;display:inline-block"></span>有机搜索</span><span class="text-bold">35%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                  <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#52C41A;display:inline-block"></span>直接访问</span><span class="text-bold">25%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                  <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#FAAD14;display:inline-block"></span>推荐流量</span><span class="text-bold">22%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+                  <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#FF4D4F;display:inline-block"></span>社交媒体</span><span class="text-bold">18%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: 用户管理（搜索列表页）===== -->
+      <div id="tab-list" class="tab-panel">
+        <div class="breadcrumb">
+          <span>首页</span><span class="sep">/</span>
+          <span class="current">用户管理</span>
+        </div>
+        <div class="page-header">
+          <div class="page-title">用户管理</div>
+          <div class="flex gap-sm">
+            <button class="btn btn-default"><i class="fas fa-upload"></i> 批量导入</button>
+            <button class="btn btn-default"><i class="fas fa-download"></i> 导出</button>
+            <button class="btn btn-primary" onclick="switchTab('form')"><i class="fas fa-plus"></i> 新增用户</button>
+          </div>
+        </div>
+
+        <!-- 搜索筛选区（SKILL 5.1）-->
+        <div class="card mb-md">
+          <div class="card-body" style="padding-bottom:var(--spacing-md)">
+            <div class="search-bar">
+              <div class="form-item">
+                <label class="form-label">用户名</label>
+                <input class="input" type="text" placeholder="请输入用户名">
+              </div>
+              <div class="form-item">
+                <label class="form-label">角色</label>
+                <select class="select">
+                  <option value="">全部角色</option>
+                  <option>管理员</option>
+                  <option>普通用户</option>
+                  <option>访客</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">状态</label>
+                <select class="select">
+                  <option value="">全部状态</option>
+                  <option>正常</option>
+                  <option>禁用</option>
+                  <option>待审核</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">注册时间</label>
+                <input class="input" type="date" value="2026-06-01">
+              </div>
+              <div class="form-item" style="align-self:flex-end">
+                <div style="display:flex;gap:var(--spacing-xs)">
+                  <button class="btn btn-primary" onclick="showToast('success','查询成功','找到 48 条用户记录')"><i class="fas fa-search"></i> 查询</button>
+                  <button class="btn btn-default">重置</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 表格区（SKILL 4.4）-->
+        <div class="card">
+          <div class="card-body" style="padding-bottom:0">
+            <div class="table-toolbar">
+              <div class="toolbar-left">
+                <span class="selected-hint" id="selectedHint">已选 <strong id="selectedCount">0</strong> 条</span>
+                <button class="btn btn-danger btn-sm" id="batchDeleteBtn" style="display:none" onclick="showModal()">
+                  <i class="fas fa-trash"></i> 批量删除
+                </button>
+                <button class="btn btn-default btn-sm" id="batchExportBtn" style="display:none">
+                  <i class="fas fa-download"></i> 批量导出
+                </button>
+              </div>
+              <div class="toolbar-right">
+                <span class="text-sm text-secondary">共 48 条</span>
+                <button class="btn btn-default btn-sm btn-icon"><i class="fas fa-columns"></i></button>
+                <button class="btn btn-default btn-sm btn-icon"><i class="fas fa-filter"></i></button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px"><input type="checkbox" class="table-checkbox" id="checkAll" onchange="toggleAll(this)"></th>
+                    <th>用户名</th>
+                    <th>邮箱</th>
+                    <th>角色</th>
+                    <th class="sort-active">状态 <i class="fas fa-sort-up sort-icon"></i></th>
+                    <th class="text-right">余额（元）<i class="fas fa-sort sort-icon"></i></th>
+                    <th>注册时间</th>
+                    <th style="width:140px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <!-- 由 JS 生成 -->
+                </tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span class="text-sm text-secondary">共 48 条，每页 10 条</span>
+              <div class="flex gap-sm items-center">
+                <select class="select" style="width:90px;height:28px;font-size:12px">
+                  <option>10 条/页</option>
+                  <option>20 条/页</option>
+                  <option>50 条/页</option>
+                </select>
+                <div class="pagination">
+                  <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                  <button class="page-btn active">1</button>
+                  <button class="page-btn">2</button>
+                  <button class="page-btn">3</button>
+                  <span style="padding:0 4px;color:var(--color-text-disabled)">...</span>
+                  <button class="page-btn">5</button>
+                  <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: 新增用户（表单页）===== -->
+      <div id="tab-form" class="tab-panel">
+        <div class="breadcrumb">
+          <span>首页</span><span class="sep">/</span>
+          <a href="#" style="color:var(--color-primary);text-decoration:none" onclick="switchTab('list')">用户管理</a>
+          <span class="sep">/</span>
+          <span class="current">新增用户</span>
+        </div>
+        <div class="page-header">
+          <div class="page-title">新增用户</div>
+        </div>
+
+        <!-- 分步表单 Steps（SKILL 4.2）-->
+        <div class="card mb-md">
+          <div class="card-body">
+            <div class="steps">
+              <div class="step-item done">
+                <div class="step-circle"><i class="fas fa-check"></i></div>
+                <div class="step-label">基础信息</div>
+              </div>
+              <div class="step-item active">
+                <div class="step-circle">2</div>
+                <div class="step-label">权限配置</div>
+              </div>
+              <div class="step-item">
+                <div class="step-circle">3</div>
+                <div class="step-label">确认提交</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 基础信息（SKILL 5.2：表单设计规范）-->
+        <div class="card mb-md">
+          <div class="card-head">
+            <div class="form-section-title" style="margin:0">基础信息</div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-item">
+                <label class="form-label"><span class="required">*</span>用户名</label>
+                <input class="input error" type="text" placeholder="2-20 个字符" value="admin">
+                <div class="form-error visible">用户名已存在，请更换</div>
+              </div>
+              <div class="form-item">
+                <label class="form-label"><span class="required">*</span>手机号</label>
+                <input class="input" type="tel" placeholder="请输入 11 位手机号">
+                <div class="form-help">用于接收系统通知短信</div>
+              </div>
+              <div class="form-item">
+                <label class="form-label"><span class="required">*</span>邮箱地址</label>
+                <input class="input" type="email" placeholder="请输入邮箱">
+              </div>
+              <div class="form-item">
+                <label class="form-label">所属部门</label>
+                <select class="select">
+                  <option>请选择部门</option>
+                  <option>技术部</option>
+                  <option>产品部</option>
+                  <option>运营部</option>
+                  <option>财务部</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label class="form-label">用户角色</label>
+                <div class="radio-group">
+                  <label class="radio-item"><input type="radio" name="role" checked> 普通用户</label>
+                  <label class="radio-item"><input type="radio" name="role"> 管理员</label>
+                  <label class="radio-item"><input type="radio" name="role"> 访客</label>
+                </div>
+              </div>
+              <div class="form-item">
+                <label class="form-label">账号状态</label>
+                <div class="flex items-center gap-sm">
+                  <button class="switch on" onclick="this.classList.toggle('on')" aria-label="账号状态开关"></button>
+                  <span class="text-sm text-secondary">启用账号后用户可立即登录</span>
+                </div>
+              </div>
+              <div class="form-item form-grid-full">
+                <label class="form-label">备注说明</label>
+                <textarea class="textarea" placeholder="可选，最多 200 字"></textarea>
+                <div class="form-help">对该账号用途的简要说明，内部使用</div>
+              </div>
+              <div class="form-item form-grid-full">
+                <label class="form-label">上传头像</label>
+                <div class="upload-area">
+                  <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                  <div class="upload-text">点击或拖拽文件至此区域上传</div>
+                  <div class="upload-hint">支持 JPG / PNG，大小不超过 2MB</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 反馈组件展示（SKILL 4.6）-->
+        <div class="card mb-md">
+          <div class="card-head"><div class="card-title">反馈组件（SKILL 4.6 验证）</div></div>
+          <div class="card-body">
+            <div class="flex gap-sm" style="flex-wrap:wrap">
+              <button class="btn btn-default" onclick="showToast('success','操作成功','用户信息已保存')"><i class="fas fa-check-circle" style="color:var(--color-success)"></i> 成功提示</button>
+              <button class="btn btn-default" onclick="showToast('warning','注意','该操作不可撤回，请确认')"><i class="fas fa-exclamation-triangle" style="color:var(--color-warning)"></i> 警告提示</button>
+              <button class="btn btn-default" onclick="showToast('error','操作失败','服务器繁忙，请稍后重试')"><i class="fas fa-times-circle" style="color:var(--color-error)"></i> 错误提示</button>
+              <button class="btn btn-default" onclick="showToast('info','系统通知','您有 3 条新消息待处理')"><i class="fas fa-info-circle" style="color:var(--color-primary)"></i> 信息提示</button>
+              <button class="btn btn-danger" onclick="showModal()"><i class="fas fa-trash"></i> 危险操作确认</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 固定底部操作栏（SKILL 5.2）-->
+        <div class="form-footer">
+          <button class="btn btn-default" onclick="switchTab('list')">取消</button>
+          <button class="btn btn-default"><i class="fas fa-save"></i> 保存草稿</button>
+          <button class="btn btn-primary" onclick="submitForm(this)"><i class="fas fa-paper-plane"></i> 提交</button>
+        </div>
+      </div>
+
+      <!-- ===== TAB: 设计规范（Token 展示）===== -->
+      <div id="tab-tokens" class="tab-panel">
+        <div class="breadcrumb">
+          <span>首页</span><span class="sep">/</span>
+          <span class="current">设计规范</span>
+        </div>
+        <div class="page-header"><div class="page-title">Design Token 规范验证</div></div>
+
+        <div class="tabs" id="tokenTabs">
+          <div class="tab-item active" onclick="switchTokenTab('colors',this)">色彩系统</div>
+          <div class="tab-item" onclick="switchTokenTab('typography',this)">字体体系</div>
+          <div class="tab-item" onclick="switchTokenTab('spacing',this)">间距规范</div>
+          <div class="tab-item" onclick="switchTokenTab('components',this)">组件状态</div>
+        </div>
+
+        <!-- 色彩 -->
+        <div id="tokenTab-colors" class="tab-panel active">
+          <div class="card mb-md">
+            <div class="card-head"><div class="card-title">主色 / 功能色 Token</div></div>
+            <div class="card-body">
+              <div class="token-grid">
+                <div class="token-item"><div class="token-swatch" style="background:#1677FF"></div><div class="token-info"><div class="token-name">colorPrimary</div><div class="token-value">#1677FF</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#4096FF"></div><div class="token-info"><div class="token-name">colorPrimaryHover</div><div class="token-value">#4096FF</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#0958D9"></div><div class="token-info"><div class="token-name">colorPrimaryActive</div><div class="token-value">#0958D9</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#E6F4FF"></div><div class="token-info"><div class="token-name">colorPrimaryBg</div><div class="token-value">#E6F4FF</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#52C41A"></div><div class="token-info"><div class="token-name">colorSuccess</div><div class="token-value">#52C41A</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#FAAD14"></div><div class="token-info"><div class="token-name">colorWarning</div><div class="token-value">#FAAD14</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#FF4D4F"></div><div class="token-info"><div class="token-name">colorError</div><div class="token-value">#FF4D4F</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#722ED1"></div><div class="token-info"><div class="token-name">colorPurple</div><div class="token-value">#722ED1</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">中性色 Token（文字 / 背景 / 边框）</div></div>
+            <div class="card-body">
+              <div class="token-grid">
+                <div class="token-item"><div class="token-swatch" style="background:rgba(0,0,0,.88)"></div><div class="token-info"><div class="token-name">colorText</div><div class="token-value">rgba(0,0,0,.88)</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:rgba(0,0,0,.65)"></div><div class="token-info"><div class="token-name">colorTextSecondary</div><div class="token-value">rgba(0,0,0,.65)</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:rgba(0,0,0,.25)"></div><div class="token-info"><div class="token-name">colorTextDisabled</div><div class="token-value">rgba(0,0,0,.25)</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#FFFFFF;border:1px solid #eee"></div><div class="token-info"><div class="token-name">colorBgContainer</div><div class="token-value">#FFFFFF</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#F5F5F5"></div><div class="token-info"><div class="token-name">colorBgLayout</div><div class="token-value">#F5F5F5</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#D9D9D9"></div><div class="token-info"><div class="token-name">colorBorder</div><div class="token-value">#D9D9D9</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:#F0F0F0"></div><div class="token-info"><div class="token-name">colorBorderSecondary</div><div class="token-value">#F0F0F0</div></div></div>
+                <div class="token-item"><div class="token-swatch" style="background:rgba(0,0,0,.06)"></div><div class="token-info"><div class="token-name">colorFillSecondary</div><div class="token-value">rgba(0,0,0,.06)</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 字体 -->
+        <div id="tokenTab-typography" class="tab-panel">
+          <div class="card">
+            <div class="card-head"><div class="card-title">字体阶梯（fontSizeHeading / fontSize）</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:var(--spacing-md)">
+              <div class="flex items-center justify-between" style="border-bottom:1px solid var(--color-border-secondary);padding-bottom:var(--spacing-md)">
+                <span style="font-size:38px;font-weight:700;color:var(--color-text-heading);line-height:1.23">标题 H1</span>
+                <span class="text-sm text-secondary mono">38px · Bold · lineHeight 1.23</span>
+              </div>
+              <div class="flex items-center justify-between" style="border-bottom:1px solid var(--color-border-secondary);padding-bottom:var(--spacing-md)">
+                <span style="font-size:30px;font-weight:600;color:var(--color-text-heading);line-height:1.27">标题 H2</span>
+                <span class="text-sm text-secondary mono">30px · SemiBold · lineHeight 1.27</span>
+              </div>
+              <div class="flex items-center justify-between" style="border-bottom:1px solid var(--color-border-secondary);padding-bottom:var(--spacing-md)">
+                <span style="font-size:24px;font-weight:600;color:var(--color-text-heading)">标题 H3</span>
+                <span class="text-sm text-secondary mono">24px · SemiBold · lineHeight 1.33</span>
+              </div>
+              <div class="flex items-center justify-between" style="border-bottom:1px solid var(--color-border-secondary);padding-bottom:var(--spacing-md)">
+                <span style="font-size:20px;font-weight:600;color:var(--color-text-heading)">标题 H4</span>
+                <span class="text-sm text-secondary mono">20px · SemiBold · lineHeight 1.4</span>
+              </div>
+              <div class="flex items-center justify-between" style="border-bottom:1px solid var(--color-border-secondary);padding-bottom:var(--spacing-md)">
+                <span style="font-size:16px;color:var(--color-text)">正文大号 Large</span>
+                <span class="text-sm text-secondary mono">16px · Regular · lineHeight 1.5</span>
+              </div>
+              <div class="flex items-center justify-between" style="border-bottom:1px solid var(--color-border-secondary);padding-bottom:var(--spacing-md)">
+                <span style="font-size:14px;color:var(--color-text)">正文默认 Default（最常用）</span>
+                <span class="text-sm text-secondary mono">14px · Regular · lineHeight 1.57</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span style="font-size:12px;color:var(--color-text-secondary)">辅助文字 Small（注释/标签）</span>
+                <span class="text-sm text-secondary mono">12px · Regular · lineHeight 1.67</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 间距 -->
+        <div id="tokenTab-spacing" class="tab-panel">
+          <div class="card">
+            <div class="card-head"><div class="card-title">8px 栅格间距系统</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:var(--spacing-sm)">
+                <div class="text-sm text-secondary mb-md">所有间距严格遵循 8px 基数，禁止使用 3/5/7/9 等非4的倍数值</div>
+                <div class="divider"></div>
+                <!-- 间距展示 -->
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;align-items:center;gap:var(--spacing-lg)">
+                    <span class="text-sm text-secondary mono" style="width:120px">spacing-xs: 4px</span>
+                    <div style="height:20px;background:var(--color-primary);opacity:.6;border-radius:2px;width:4px"></div>
+                    <span class="text-sm text-secondary">组件内最小间距</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--spacing-lg)">
+                    <span class="text-sm text-secondary mono" style="width:120px">spacing-sm: 8px</span>
+                    <div style="height:20px;background:var(--color-primary);opacity:.6;border-radius:2px;width:8px"></div>
+                    <span class="text-sm text-secondary">组件内标准间距</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--spacing-lg)">
+                    <span class="text-sm text-secondary mono" style="width:120px">spacing-md: 16px</span>
+                    <div style="height:20px;background:var(--color-primary);opacity:.7;border-radius:2px;width:16px"></div>
+                    <span class="text-sm text-secondary">模块内容间距</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--spacing-lg)">
+                    <span class="text-sm text-secondary mono" style="width:120px">spacing-lg: 24px</span>
+                    <div style="height:20px;background:var(--color-primary);opacity:.8;border-radius:2px;width:24px"></div>
+                    <span class="text-sm text-secondary">Card padding / 页面间距</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--spacing-lg)">
+                    <span class="text-sm text-secondary mono" style="width:120px">spacing-xl: 32px</span>
+                    <div style="height:20px;background:var(--color-primary);opacity:.9;border-radius:2px;width:32px"></div>
+                    <span class="text-sm text-secondary">模块间距</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--spacing-lg)">
+                    <span class="text-sm text-secondary mono" style="width:120px">spacing-2xl: 48px</span>
+                    <div style="height:20px;background:var(--color-primary);border-radius:2px;width:48px"></div>
+                    <span class="text-sm text-secondary">页面级大间距</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 组件状态 -->
+        <div id="tokenTab-components" class="tab-panel">
+          <div class="card mb-md">
+            <div class="card-head"><div class="card-title">按钮状态（Button）</div></card-head>
+            <div class="card-body">
+              <div class="flex gap-sm" style="flex-wrap:wrap;margin-bottom:var(--spacing-md)">
+                <button class="btn btn-primary">主要按钮</button>
+                <button class="btn btn-default">默认按钮</button>
+                <button class="btn btn-danger">危险按钮</button>
+                <button class="btn btn-link">链接按钮</button>
+                <button class="btn btn-primary" disabled style="opacity:.4;cursor:not-allowed">禁用状态</button>
+              </div>
+              <div class="flex gap-sm" style="flex-wrap:wrap">
+                <button class="btn btn-primary btn-sm">小尺寸</button>
+                <button class="btn btn-default btn-sm">小尺寸</button>
+                <button class="btn btn-default"><i class="fas fa-search"></i> 带图标</button>
+                <button class="btn btn-primary btn-icon"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-md">
+            <div class="card-head"><div class="card-title">Tag / Badge 状态语义</div></div>
+            <div class="card-body">
+              <div class="flex gap-sm" style="flex-wrap:wrap;margin-bottom:var(--spacing-md)">
+                <span class="tag tag-success"><span class="tag-dot" style="background:#52C41A"></span>正常</span>
+                <span class="tag tag-warning"><span class="tag-dot" style="background:#FAAD14"></span>待审核</span>
+                <span class="tag tag-error"><span class="tag-dot" style="background:#FF4D4F"></span>已禁用</span>
+                <span class="tag tag-default">普通标签</span>
+                <span class="tag tag-blue">蓝色标签</span>
+              </div>
+              <div class="text-sm text-secondary">颜色语义：绿=正常/成功，橙=待处理/警告，红=错误/禁用，灰=默认/无状态</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">输入框状态</div></div>
+            <div class="card-body">
+              <div class="form-grid" style="max-width:600px">
+                <div class="form-item">
+                  <label class="form-label">默认状态</label>
+                  <input class="input" placeholder="请输入内容">
+                </div>
+                <div class="form-item">
+                  <label class="form-label">聚焦状态（蓝色光晕）</label>
+                  <input class="input" style="border-color:var(--color-primary);box-shadow:0 0 0 2px rgba(22,119,255,.2)" placeholder="已聚焦">
+                </div>
+                <div class="form-item">
+                  <label class="form-label">错误状态</label>
+                  <input class="input error" value="错误内容">
+                  <div class="form-error visible">请输入有效内容</div>
+                </div>
+                <div class="form-item">
+                  <label class="form-label">禁用状态</label>
+                  <input class="input" disabled value="不可编辑" style="background:var(--color-fill-quaternary);cursor:not-allowed;color:var(--color-text-disabled)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 表格数据
+// ============================================================
+const tableData = [
+  { name:'张三丰', email:'zhang@example.com', role:'管理员', status:'正常', balance:12800, date:'2026-01-15' },
+  { name:'李雷', email:'lilei@example.com', role:'普通用户', status:'正常', balance:4560, date:'2026-02-20' },
+  { name:'韩梅梅', email:'hanmm@example.com', role:'普通用户', status:'待审核', balance:890, date:'2026-03-05' },
+  { name:'王小明', email:'wxm@example.com', role:'访客', status:'禁用', balance:0, date:'2026-03-18' },
+  { name:'赵丽颖', email:'zly@example.com', role:'普通用户', status:'正常', balance:23600, date:'2026-04-01' },
+  { name:'陈建国', email:'cjg@example.com', role:'管理员', status:'正常', balance:56000, date:'2026-04-22' },
+  { name:'刘梅', email:'liumei@example.com', role:'普通用户', status:'待审核', balance:2340, date:'2026-05-10' },
+];
+
+const statusMap = {
+  '正常':   'tag-success',
+  '待审核': 'tag-warning',
+  '禁用':   'tag-error',
+};
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = tableData.map((r, i) => `
+    <tr>
+      <td><input type="checkbox" class="table-checkbox row-check" data-idx="${i}" onchange="updateSelection()"></td>
+      <td><div class="flex items-center gap-sm">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">${r.name[0]}</div>
+        <span class="text-bold">${r.name}</span>
+      </div></td>
+      <td class="text-secondary">${r.email}</td>
+      <td>${r.role === '管理员' ? `<span class="tag tag-blue">${r.role}</span>` : `<span class="tag tag-default">${r.role}</span>`}</td>
+      <td><span class="tag ${statusMap[r.status]}">${r.status}</span></td>
+      <td class="text-right text-bold">¥ ${r.balance.toLocaleString()}</td>
+      <td class="text-secondary text-sm">${r.date}</td>
+      <td>
+        <button class="btn btn-link btn-sm">编辑</button>
+        <button class="btn btn-link btn-sm" style="color:var(--color-error)" onclick="showModal()">删除</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function toggleAll(el) {
+  document.querySelectorAll('.row-check').forEach(cb => cb.checked = el.checked);
+  updateSelection();
+}
+
+function updateSelection() {
+  const checked = document.querySelectorAll('.row-check:checked').length;
+  const hint = document.getElementById('selectedHint');
+  const count = document.getElementById('selectedCount');
+  const batchDel = document.getElementById('batchDeleteBtn');
+  const batchExp = document.getElementById('batchExportBtn');
+  count.textContent = checked;
+  if (checked > 0) {
+    hint.classList.add('visible');
+    batchDel.style.display = 'inline-flex';
+    batchExp.style.display = 'inline-flex';
+  } else {
+    hint.classList.remove('visible');
+    batchDel.style.display = 'none';
+    batchExp.style.display = 'none';
+  }
+}
+
+// ============================================================
+// Tab 切换
+// ============================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  // 激活菜单
+  const items = document.querySelectorAll('.menu-item');
+  const map = { dashboard: 0, list: 1, form: 2, tokens: 3 };
+  if (map[name] !== undefined) items[map[name]].classList.add('active');
+}
+
+function switchTokenTab(name, el) {
+  document.querySelectorAll('#tokenTabs .tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['colors','typography','spacing','components'].forEach(k => {
+    const p = document.getElementById('tokenTab-' + k);
+    if (p) p.classList.remove('active');
+  });
+  const target = document.getElementById('tokenTab-' + name);
+  if (target) target.classList.add('active');
+}
+
+// ============================================================
+// Toast（SKILL 4.6：反馈组件）
+// ============================================================
+const iconMap = {
+  success: 'fa-check-circle',
+  warning: 'fa-exclamation-triangle',
+  error:   'fa-times-circle',
+  info:    'fa-info-circle',
+};
+
+function showToast(type, title, desc) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <div class="toast-icon"><i class="fas ${iconMap[type] || 'fa-info-circle'}"></i></div>
+    <div>
+      <div class="toast-title">${title}</div>
+      <div class="toast-desc">${desc}</div>
+    </div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'slideOut .3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// ============================================================
+// Modal（Popconfirm / 二次确认）
+// ============================================================
+function showModal() {
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('confirmModal').classList.remove('open');
+}
+function confirmDelete() {
+  closeModal();
+  showToast('success', '删除成功', '用户「张三丰」已从系统移除');
+}
+document.getElementById('confirmModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ============================================================
+// 表单提交（loading 态）
+// ============================================================
+function submitForm(btn) {
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> 提交';
+    showToast('success', '提交成功', '新用户账号已创建，等待审核');
+    switchTab('list');
+  }, 1800);
+}
+
+// ============================================================
+// Init
+// ============================================================
+renderTable();
+feather.replace();
+</script>
+</body>
+</html>
